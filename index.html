@@ -16,7 +16,7 @@
                 <img src="assets/icons/LAVU_logo.png" alt="LAVU Logo" class="logo" onerror="this.style.display='none'">
                 <div>
                     <h1 id="titleText">LAVU-OOE App Drawer</h1>
-                    <p class="subtitle" style="color: #718096; font-size: 0.95rem; margin-top: 4px;">Central software infrastructure & digital logistics tools</p>
+                    <p class="subtitle" id="subtitleText" style="color: #718096; font-size: 0.95rem; margin-top: 4px;">Central software infrastructure & digital logistics tools</p>
                 </div>
             </div>
             <div class="language-selector">
@@ -25,18 +25,18 @@
             </div>
         </header>
 
-        <!-- Info Badges (aus deinem Screenshot) -->
+        <!-- Info Badges -->
         <div class="badge-container" style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; align-items: center;">
-            <span style="background: #e6fffa; color: #234e52; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Sustainable</span>
-            <span style="background: #ebf8ff; color: #2b6cb0; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Innovative</span>
-            <span style="background: #fefcbf; color: #744210; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Municipal</span>
-            <button onclick="toggleStats()" style="background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; padding: 4px 14px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+            <span id="badgeSustainable" style="background: #e6fffa; color: #234e52; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Sustainable</span>
+            <span id="badgeInnovative" style="background: #ebf8ff; color: #2b6cb0; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Innovative</span>
+            <span id="badgeMunicipal" style="background: #fefcbf; color: #744210; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Municipal</span>
+            <button onclick="toggleStats()" id="btnInfoStats" style="background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; padding: 4px 14px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
                 <span>ℹ️</span> Info
             </button>
         </div>
 
         <!-- Dashboard Stats Section -->
-        <section class="lavu-dashboard-stats show" id="lavuStatsDashboard">
+        <section class="lavu-dashboard-stats" id="lavuStatsDashboard">
             <div class="stat-card">
                 <div class="stat-icon">🌱</div>
                 <div class="stat-info">
@@ -71,13 +71,12 @@
 
         <!-- Main App Grid Container -->
         <main class="app-grid" id="app-grid">
-            <!-- JavaScript rendert hier die Apps und den "Add App"-Platzhalter (3. Slot) -->
             <div class="grid-loading" id="gridLoading">Lade Anwendungen...</div>
         </main>
 
         <!-- Footer -->
         <div class="ftr" style="display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9rem;">
-            Built with <span style="color: #e74c3c;">&hearts;</span> by Karli
+            <span id="footerTextEl">Built with <span style="color: #e74c3c;">&hearts;</span> by Karli</span>
             <span style="color: #cbd5e1;">|</span>
             <a href="https://github.com/7pub" target="_blank" style="display: inline-flex; align-items: center; gap: 5px; color: inherit; text-decoration: none; transition: color 0.2s;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
@@ -97,19 +96,19 @@
             <form id="addAppForm" onsubmit="handleFormSubmit(event)">
                 <div class="form-group">
                     <label for="appName" id="labelName">Name der Anwendung *</label>
-                    <input type="text" id="appName" required placeholder="z.B. Label Studio">
+                    <input type="text" id="appName" required>
                 </div>
                 <div class="form-group">
                     <label for="appUrl" id="labelUrl">Anwendungs-URL (Link) *</label>
-                    <input type="url" id="appUrl" required placeholder="https://example.com">
+                    <input type="url" id="appUrl" required>
                 </div>
                 <div class="form-group">
                     <label for="appDesc" id="labelDesc">Beschreibung</label>
-                    <textarea id="appDesc" rows="3" placeholder="Kurze Beschreibung der Funktion..."></textarea>
+                    <textarea id="appDesc" rows="3"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="appIcon" id="labelIcon">Emoji Icon</label>
-                    <input type="text" id="appIcon" maxlength="4" placeholder="z.B. 🏷️, 📦, 💻 (Standard: 🚀)">
+                    <input type="text" id="appIcon" maxlength="4">
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()" id="btnCancel">Abbrechen</button>

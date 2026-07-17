@@ -3,10 +3,20 @@ const API_URL = "https://apps-api.lavu-ooe.workers.dev/";
 let apps = [];
 let currentLang = "de";
 
-// Dual Language Context Matrix
+// Extended Language Matrix covering all static, dynamic and placeholder text layers
 const translations = {
     de: {
-        title: "Anwendungs-Verzeichnis",
+        title: "LAVU-OOE App Drawer",
+        subtitle: "Zentrale Software-Infrastruktur & digitale Logistikwerkzeuge",
+        badgeSustainable: "Nachhaltig",
+        badgeInnovative: "Innovativ",
+        badgeMunicipal: "Kommunal",
+        btnInfo: "ℹ️ Info",
+        statAsz: "Altstoffsammelzentren (ASZ)",
+        statRec: "Jährlich gesammelte Wertstoffe",
+        statStaff: "Engagierte Teammitglieder",
+        statCirc: "Kreislaufwirtschaft Oberösterreich",
+        footerText: 'Erstellt mit <span style="color: #e74c3c;">&hearts;</span> von Karli',
         loading: "Lade Anwendungen...",
         addApp: "App hinzufügen",
         modalTitle: "Neue App hinzufügen",
@@ -14,6 +24,10 @@ const translations = {
         labelUrl: "Anwendungs-URL (Link) *",
         labelDesc: "Beschreibung",
         labelIcon: "Emoji Icon",
+        phName: "z.B. Etiketten-Druckstudio",
+        phUrl: "https://example.com",
+        phDesc: "Kurze Beschreibung der Funktion...",
+        phIcon: "z.B. 🏷️, 📦, 💻 (Standard: 🚀)",
         btnCancel: "Abbrechen",
         btnSave: "Speichern",
         btnSaving: "Wird gespeichert...",
@@ -21,7 +35,17 @@ const translations = {
         errSave: "Fehler beim Speichern der Anwendung."
     },
     en: {
-        title: "Application Directory",
+        title: "LAVU-OOE App Drawer",
+        subtitle: "Central software infrastructure & digital logistics tools",
+        badgeSustainable: "Sustainable",
+        badgeInnovative: "Innovative",
+        badgeMunicipal: "Municipal",
+        btnInfo: "ℹ️ Info",
+        statAsz: "Recycling Centers (ASZ)",
+        statRec: "Waste materials collected annually",
+        statStaff: "Dedicated team members",
+        statCirc: "Circular Economy Upper Austria",
+        footerText: 'Built with <span style="color: #e74c3c;">&hearts;</span> by Karli',
         loading: "Loading applications...",
         addApp: "Add Application",
         modalTitle: "Add New Application",
@@ -29,6 +53,10 @@ const translations = {
         labelUrl: "Application URL (Link) *",
         labelDesc: "Description",
         labelIcon: "Emoji Icon",
+        phName: "e.g. Label Printing Studio",
+        phUrl: "https://example.com",
+        phDesc: "Short description of the function...",
+        phIcon: "e.g. 🏷️, 📦, 💻 (Default: 🚀)",
         btnCancel: "Cancel",
         btnSave: "Save",
         btnSaving: "Saving...",
@@ -39,12 +67,13 @@ const translations = {
 
 // Initialize Dashboard
 document.addEventListener("DOMContentLoaded", () => {
+    // Initial text initialization based on default "de"
+    setLanguage("de");
     loadAppsFromAPI();
 });
 
 // Fetch Application Array from Worker Endpoint
 async function loadAppsFromAPI() {
-    const grid = document.getElementById("app-grid");
     try {
         const response = await fetch(API_URL, { method: "GET" });
         if (!response.ok) throw new Error(`HTTP Status ${response.status}`);
@@ -53,12 +82,14 @@ async function loadAppsFromAPI() {
         renderApps();
     } catch (error) {
         console.error("API load failed, falling back to basic layout:", error);
-        // Fallback array if database is offline or not created yet
+        // Fallback array utilizing standard fields and localized alternative options
         apps = [
             {
-                name: "Etiketten-Druckstudio",
+                name_de: "Etiketten-Druckstudio",
+                name_en: "Label Printing Studio",
                 url: "https://lavu-ooe.github.io/Etiketten-Druckstudio/",
-                desc: "Studio for creating and printing standardized container and sorting labels.",
+                desc_de: "Studio zur Erstellung und zum Druck von standardisierten Behälter- und Sortieretiketten.",
+                desc_en: "Studio for creating and printing standardized container and sorting labels.",
                 icon: "🏷️"
             }
         ];
@@ -72,21 +103,26 @@ function renderApps() {
     if (!grid) return;
     grid.innerHTML = "";
 
-    // 1. Map existing entries to standard card templates
+    // 1. Map entries dynamically focusing on local translation properties
     apps.forEach(app => {
         const card = document.createElement("a");
         card.className = "app-card";
         card.href = app.url;
-        card.target = "_blank"; // Open applications in a new tab
+        card.target = "_blank"; 
+
+        // Smart translation matching: Uses localized keys (name_de/name_en) if available, otherwise falls back to standard properties
+        const appName = app[`name_${currentLang}`] || app.name || "Unnamed App";
+        const appDesc = app[`desc_${currentLang}`] || app.desc || "";
+
         card.innerHTML = `
             <div class="app-icon">${app.icon || "🚀"}</div>
-            <h3>${app.name}</h3>
-            <p>${app.desc || ""}</p>
+            <h3>${appName}</h3>
+            <p>${appDesc}</p>
         `;
         grid.appendChild(card);
     });
 
-    // 2. Inject the 'Add App' Interactive Box into the next sequential slot (the 3rd slot!)
+    // 2. Inject the 'Add App' Interactive Box into the sequential slot
     const addCard = document.createElement("div");
     addCard.className = "app-card add-placeholder-card";
     addCard.innerHTML = `
@@ -98,12 +134,15 @@ function renderApps() {
     addCard.addEventListener("click", openModal);
     grid.appendChild(addCard);
 }
+
+// Stats Container Toggle Link Activity
 function toggleStats() {
     const statsSection = document.getElementById("lavuStatsDashboard");
     if (statsSection) {
         statsSection.classList.toggle("hidden");
     }
 }
+
 // Modal Toggle Mechanics
 function openModal() {
     document.getElementById("addAppModal").classList.remove("hidden");
@@ -147,13 +186,12 @@ async function handleFormSubmit(event) {
             await response.text(); 
         }
 
-        // Smart state assignment based on API behavior
         if (Array.isArray(responseData)) {
             apps = responseData;
         } else if (responseData && responseData.added) {
             apps.push(responseData.added);
         } else {
-            apps.push(appData); // Edge-case local sync fallback
+            apps.push(appData); 
         }
 
         renderApps();
@@ -167,7 +205,7 @@ async function handleFormSubmit(event) {
     }
 }
 
-// Update Local Language String Matrix Options
+// Update Local Language Matrix Options
 function setLanguage(lang) {
     currentLang = lang;
     
@@ -175,8 +213,23 @@ function setLanguage(lang) {
     document.getElementById("langBtnDe").classList.toggle("active", lang === "de");
     document.getElementById("langBtnEn").classList.toggle("active", lang === "en");
 
-    // Dynamic document DOM string injection
+    // Dynamic document DOM string injection (Header & Structure)
     document.getElementById("titleText").innerText = translations[lang].title;
+    document.getElementById("subtitleText").innerText = translations[lang].subtitle;
+    
+    // Badges & Toggle Controls
+    document.getElementById("badgeSustainable").innerText = translations[lang].badgeSustainable;
+    document.getElementById("badgeInnovative").innerText = translations[lang].badgeInnovative;
+    document.getElementById("badgeMunicipal").innerText = translations[lang].badgeMunicipal;
+    document.getElementById("btnInfoStats").innerHTML = `<span>ℹ️</span> ${translations[lang].btnInfo.replace('ℹ️ ', '')}`;
+
+    // Statistics Card Metrics Labels
+    document.getElementById("lblStatAsz").innerText = translations[lang].statAsz;
+    document.getElementById("lblStatRec").innerText = translations[lang].statRec;
+    document.getElementById("lblStatStaff").innerText = translations[lang].statStaff;
+    document.getElementById("lblStatCirc").innerText = translations[lang].statCirc;
+
+    // Modal Form Labels
     document.getElementById("modalTitle").innerText = translations[lang].modalTitle;
     document.getElementById("labelName").innerText = translations[lang].labelName;
     document.getElementById("labelUrl").innerText = translations[lang].labelUrl;
@@ -185,9 +238,17 @@ function setLanguage(lang) {
     document.getElementById("btnCancel").innerText = translations[lang].btnCancel;
     document.getElementById("submitBtn").innerText = translations[lang].btnSave;
     
+    // Modal Input Form Placeholders
+    document.getElementById("appName").placeholder = translations[lang].phName;
+    document.getElementById("appUrl").placeholder = translations[lang].phUrl;
+    document.getElementById("appDesc").placeholder = translations[lang].phDesc;
+    document.getElementById("appIcon").placeholder = translations[lang].phIcon;
+    
+    // Footer & Async Loading Indicators
+    document.getElementById("footerTextEl").innerHTML = translations[lang].footerText;
     const loadingEl = document.getElementById("gridLoading");
     if (loadingEl) loadingEl.innerText = translations[lang].loading;
 
-    // Refresh display layout text layers
+    // Refresh dynamic app layout grid fields 
     renderApps();
 }
