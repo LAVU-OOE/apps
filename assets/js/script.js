@@ -98,7 +98,12 @@ function renderApps() {
     addCard.addEventListener("click", openModal);
     grid.appendChild(addCard);
 }
-
+function toggleStats() {
+    const statsSection = document.getElementById("lavuStatsDashboard");
+    if (statsSection) {
+        statsSection.classList.toggle("hidden");
+    }
+}
 // Modal Toggle Mechanics
 function openModal() {
     document.getElementById("addAppModal").classList.remove("hidden");
