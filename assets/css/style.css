@@ -122,6 +122,7 @@ body {
 
 /* Unified Dashboard Interactive Cards */
 .app-card {
+    position: relative;
     background: white;
     border-radius: 10px;
     padding: 24px;
@@ -148,6 +149,7 @@ body {
     font-size: 1.2rem;
     color: #2d3748;
     margin-bottom: 8px;
+    padding-right: 25px;
 }
 
 .app-card p {
@@ -156,7 +158,67 @@ body {
     line-height: 1.4;
 }
 
-/* Nested Grid Add Placeholder Box */
+/* Edit-Button auf den Kacheln */
+.edit-card-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: #edf2f7;
+    border: 1px solid #cbd5e0;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    z-index: 5;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.edit-card-btn:hover {
+    background: #e2e8f0;
+    border-color: #a0aec0;
+    transform: scale(1.1);
+}
+
+/* Dashboard Stats Cards */
+.lavu-dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    border: 1px solid #edf2f7;
+}
+
+.stat-icon {
+    font-size: 2rem;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+/* Add Placeholder Box */
 .app-card.add-placeholder-card {
     border: 2px dashed #3182ce;
     background-color: #f7fafc;
@@ -193,7 +255,7 @@ body {
     font-weight: 600;
 }
 
-/* Modal Overlay Framework */
+/* Modal Overlay */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -242,7 +304,7 @@ body {
     color: #4a5568;
 }
 
-/* Inputs and Buttons */
+/* Formulare */
 .form-group {
     margin-bottom: 16px;
 }
@@ -268,6 +330,12 @@ body {
     outline: none;
     border-color: #3182ce;
     box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.25);
+}
+
+.form-group input:disabled {
+    background: #edf2f7;
+    color: #a0aec0;
+    cursor: not-allowed;
 }
 
 .form-actions {

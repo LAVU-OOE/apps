@@ -1,47 +1,77 @@
-// Global Configuration
+// ============================================================
+//  GLOBALE KONFIGURATION
+// ============================================================
 const API_URL = "https://apps-api.lavu-ooe.workers.dev/";
 let apps = [];
 let currentLang = "de";
 
-// PWA Installation
+// PWA‑Installations‑Globals
 let deferredPrompt = null;
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-// Dual Language Context Matrix (erweitert um Install-Button-Texte)
+// ============================================================
+//  ÜBERSETZUNGEN (alle Texte der Seite)
+// ============================================================
 const translations = {
     de: {
-        title: "Anwendungs-Verzeichnis",
+        title: "LAVU OÖ - Anwendungs-Verzeichnis",
+        subtitle: "Zentrale Software-Infrastruktur & digitale Logistikwerkzeuge",
         loading: "Lade Anwendungen...",
         addApp: "App hinzufügen",
+        badgeSustainable: "Nachhaltig",
+        badgeInnovative: "Innovativ",
+        badgeMunicipal: "Kommunal",
+        statAsz: "Altstoffsammelzentren (ASZ)",
+        statRec: "Jährlich gesammelte Wertstoffe",
+        statStaff: "Engagierte Teammitglieder",
+        statCirc: "Kreislaufwirtschaft Oberösterreich",
+        footer: "Erstellt mit ♥ von Karli",
         modalTitle: "Neue App hinzufügen",
-        labelName: "Name der Anwendung *",
+        labelNameDe: "Name der Anwendung (DE) *",
+        labelNameEn: "Name der Anwendung (EN) *",
         labelUrl: "Anwendungs-URL (Link) *",
-        labelDesc: "Beschreibung",
+        labelDescDe: "Beschreibung (DE)",
+        labelDescEn: "Beschreibung (EN)",
         labelIcon: "Emoji Icon",
+        labelPassword: "Admin Passwort *",
         btnCancel: "Abbrechen",
         btnSave: "Speichern",
         btnSaving: "Wird gespeichert...",
         errFetch: "Fehler beim Laden des API-Verzeichnisses.",
         errSave: "Fehler beim Speichern der Anwendung.",
+        // Install‑Button‑Texte
         installBtnText: "App",
         installBtnOpen: "Als App öffnen…",
         installBtnClose: "Schließen",
         installFallback: "Die App kann über das Browser-Menü oder den Installationsbanner installiert werden."
     },
     en: {
-        title: "Application Directory",
+        title: "LAVU OÖ - Application Directory",
+        subtitle: "Central software infrastructure & digital logistics tools",
         loading: "Loading applications...",
         addApp: "Add Application",
+        badgeSustainable: "Sustainable",
+        badgeInnovative: "Innovative",
+        badgeMunicipal: "Municipal",
+        statAsz: "Recycling Centers (ASZ)",
+        statRec: "Waste materials collected annually",
+        statStaff: "Dedicated team members",
+        statCirc: "Circular Economy Upper Austria",
+        footer: "Built with ♥ by Karli",
         modalTitle: "Add New Application",
-        labelName: "Application Name *",
+        labelNameDe: "Application Name (DE) *",
+        labelNameEn: "Application Name (EN) *",
         labelUrl: "Application URL (Link) *",
-        labelDesc: "Description",
+        labelDescDe: "Description (DE)",
+        labelDescEn: "Description (EN)",
         labelIcon: "Emoji Icon",
+        labelPassword: "Admin Password *",
         btnCancel: "Cancel",
         btnSave: "Save",
         btnSaving: "Saving...",
         errFetch: "Error loading the application log from API.",
         errSave: "Could not save the application.",
+        // Install‑Button‑Texte
         installBtnText: "Install",
         installBtnOpen: "Open as…",
         installBtnClose: "Close",
@@ -49,30 +79,31 @@ const translations = {
     }
 };
 
-// Initialize Dashboard
+// ============================================================
+//  INITIALISIERUNG
+// ============================================================
 document.addEventListener("DOMContentLoaded", () => {
     loadAppsFromAPI();
-    updateInstallButton(); // initialer Zustand
-    registerInstallEvents();
+    updateInstallButton();          // initialen Zustand setzen
+    registerInstallEvents();        // PWA‑Events abonnieren
 });
 
-// PWA Event-Registrierung
+// ============================================================
+//  PWA‑INSTALLATIONS‑LOGIK (wie auf gaestehaus22.at)
+// ============================================================
 function registerInstallEvents() {
-    // beforeinstallprompt abfangen
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         updateInstallButton();
     });
 
-    // App wurde installiert
     window.addEventListener('appinstalled', () => {
         deferredPrompt = null;
         localStorage.setItem('pwaInstalled', 'true');
         updateInstallButton();
     });
 
-    // Sichtbarkeitsänderung (z.B. Wechsel in den Standalone-Modus)
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
             updateInstallButton();
@@ -80,18 +111,16 @@ function registerInstallEvents() {
     });
 }
 
-// Update des Install-Buttons je nach Zustand
 function updateInstallButton() {
     const btn = document.getElementById('installAppBtn');
     const icon = document.getElementById('installIcon');
     const text = document.getElementById('installText');
     if (!btn) return;
 
-    // Zustand ermitteln
     const isInstalled = localStorage.getItem('pwaInstalled') === 'true' || isStandalone;
     const isInStandalone = isStandalone || window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-    // 1. Standalone-Modus: "Schließen"
+    // 1. Standalone-Modus → Schließen
     if (isInStandalone) {
         icon.textContent = '❌';
         text.textContent = translations[currentLang].installBtnClose;
@@ -100,7 +129,7 @@ function updateInstallButton() {
         return;
     }
 
-    // 2. Installiert, aber im Browser: "Als App öffnen"
+    // 2. Installiert, aber im Browser → Als App öffnen
     if (isInstalled) {
         icon.textContent = '📲';
         text.textContent = translations[currentLang].installBtnOpen;
@@ -109,14 +138,13 @@ function updateInstallButton() {
         return;
     }
 
-    // 3. Nicht installiert: "App installieren"
+    // 3. Nicht installiert → Installieren
     icon.textContent = '📲';
     text.textContent = translations[currentLang].installBtnText;
     btn.onclick = installApp;
     btn.style.background = '#3182ce';
 }
 
-// Installationsdialog auslösen
 function installApp() {
     if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -128,40 +156,38 @@ function installApp() {
             deferredPrompt = null;
         });
     } else {
-        // Fallback: Browser-eigener Installationsmechanismus
         alert(translations[currentLang].installFallback);
     }
 }
 
-// Installierte App öffnen (Android Intent)
 function openInstalledApp() {
     const url = window.location.href;
-    // Intent für Chrome (funktioniert auf Android)
     const intentUrl = `intent://${url.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end;`;
     window.location.href = intentUrl;
-    // Fallback: nach 2 Sekunden normale URL öffnen (falls Intent fehlschlägt)
     setTimeout(() => {
         window.open(url, '_blank');
     }, 2000);
 }
 
-// Fetch Application Array from Worker Endpoint
+// ============================================================
+//  APP‑VERWALTUNG (Laden, Rendern, Speichern)
+// ============================================================
 async function loadAppsFromAPI() {
     const grid = document.getElementById("app-grid");
     try {
         const response = await fetch(API_URL, { method: "GET" });
         if (!response.ok) throw new Error(`HTTP Status ${response.status}`);
-        
         apps = await response.json();
         renderApps();
     } catch (error) {
         console.error("API load failed, falling back to basic layout:", error);
-        // Fallback array if database is offline or not created yet
         apps = [
             {
-                name: "Etiketten-Druckstudio",
+                nameDe: "Etiketten-Druckstudio",
+                nameEn: "Label Printing Studio",
                 url: "https://lavu-ooe.github.io/Etiketten-Druckstudio/",
-                desc: "Studio for creating and printing standardized container and sorting labels.",
+                descDe: "Studio zum Erstellen und Drucken von standardisierten Behälter- und Sortieretiketten.",
+                descEn: "Studio for creating and printing standardized container and sorting labels.",
                 icon: "🏷️"
             }
         ];
@@ -169,27 +195,29 @@ async function loadAppsFromAPI() {
     }
 }
 
-// Render active items and appends the dynamic operational placeholder card
 function renderApps() {
     const grid = document.getElementById("app-grid");
     if (!grid) return;
     grid.innerHTML = "";
 
-    // 1. Map existing entries to standard card templates
+    // Bestehende Apps
     apps.forEach(app => {
         const card = document.createElement("a");
         card.className = "app-card";
         card.href = app.url;
-        card.target = "_blank"; // Open applications in a new tab
+        card.target = "_blank";
+        // Namen und Beschreibung je nach aktueller Sprache
+        const name = (currentLang === 'de' && app.nameDe) ? app.nameDe : (app.nameEn || app.nameDe || "Unbenannt");
+        const desc = (currentLang === 'de' && app.descDe) ? app.descDe : (app.descEn || app.descDe || "");
         card.innerHTML = `
             <div class="app-icon">${app.icon || "🚀"}</div>
-            <h3>${app.name}</h3>
-            <p>${app.desc || ""}</p>
+            <h3>${name}</h3>
+            <p>${desc}</p>
         `;
         grid.appendChild(card);
     });
 
-    // 2. Inject the 'Add App' Interactive Box into the next sequential slot
+    // "App hinzufügen"-Kachel
     const addCard = document.createElement("div");
     addCard.className = "app-card add-placeholder-card";
     addCard.innerHTML = `
@@ -202,7 +230,9 @@ function renderApps() {
     grid.appendChild(addCard);
 }
 
-// Modal Toggle Mechanics
+// ============================================================
+//  MODAL (Hinzufügen / Bearbeiten)
+// ============================================================
 function openModal() {
     document.getElementById("addAppModal").classList.remove("hidden");
 }
@@ -212,20 +242,32 @@ function closeModal() {
     document.getElementById("addAppForm").reset();
 }
 
-// Handle Form Execution and Save Data Dynamically
 async function handleFormSubmit(event) {
     event.preventDefault();
-    
     const submitBtn = document.getElementById("submitBtn");
-    submitBtn.disabled = true;
-    submitBtn.innerText = translations[currentLang].btnSaving;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = translations[currentLang].btnSaving;
+    }
 
     const appData = {
-        name: document.getElementById("appName").value,
-        url: document.getElementById("appUrl").value,
-        desc: document.getElementById("appDesc").value,
-        icon: document.getElementById("appIcon").value.trim() || "🚀"
+        nameDe: document.getElementById("appNameDe")?.value || "",
+        nameEn: document.getElementById("appNameEn")?.value || "",
+        url: document.getElementById("appUrl")?.value || "",
+        descDe: document.getElementById("appDescDe")?.value || "",
+        descEn: document.getElementById("appDescEn")?.value || "",
+        icon: document.getElementById("appIcon")?.value?.trim() || "🚀",
+        password: document.getElementById("adminPassword")?.value || ""
     };
+
+    if ((!appData.nameDe && !appData.nameEn) || !appData.url) {
+        alert("Bitte fülle alle Pflichtfelder (Name und URL) aus.");
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = translations[currentLang].btnSave;
+        }
+        return;
+    }
 
     try {
         const response = await fetch(API_URL, {
@@ -234,65 +276,76 @@ async function handleFormSubmit(event) {
             body: JSON.stringify(appData)
         });
 
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-
-        const contentType = response.headers.get("content-type");
-        let responseData = null;
-        
-        if (contentType && contentType.includes("application/json")) {
-            responseData = await response.json();
-        } else {
-            await response.text(); 
+        if (!response.ok) {
+            if (response.status === 403) throw new Error("Passwort falsch");
+            throw new Error("Netzwerkfehler");
         }
 
-        // Smart state assignment based on API behavior
-        if (Array.isArray(responseData)) {
-            apps = responseData;
-        } else if (responseData && responseData.added) {
-            apps.push(responseData.added);
-        } else {
-            apps.push(appData); // Edge-case local sync fallback
-        }
-
-        renderApps();
         closeModal();
+        location.reload();
     } catch (error) {
-        console.error("Error submitting new application link:", error);
-        alert(translations[currentLang].errSave);
+        console.error("Fehler beim Speichern:", error);
+        alert("Fehler beim Speichern: " + error.message);
     } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = translations[currentLang].btnSave;
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = translations[currentLang].btnSave;
+        }
     }
 }
 
-// Update Local Language String Matrix Options
+// ============================================================
+//  SPRACHUMSCHALTUNG (alle Texte aktualisieren)
+// ============================================================
 function setLanguage(lang) {
     currentLang = lang;
-    
-    // Toggle active link visual highlights
+    const t = translations[lang];
+
+    // Sprach‑Buttons
     document.getElementById("langBtnDe").classList.toggle("active", lang === "de");
     document.getElementById("langBtnEn").classList.toggle("active", lang === "en");
 
-    // Dynamic document DOM string injection
-    document.getElementById("titleText").innerText = translations[lang].title;
-    document.getElementById("modalTitle").innerText = translations[lang].modalTitle;
-    document.getElementById("labelName").innerText = translations[lang].labelName;
-    document.getElementById("labelUrl").innerText = translations[lang].labelUrl;
-    document.getElementById("labelDesc").innerText = translations[lang].labelDesc;
-    document.getElementById("labelIcon").innerText = translations[lang].labelIcon;
-    document.getElementById("btnCancel").innerText = translations[lang].btnCancel;
-    document.getElementById("submitBtn").innerText = translations[lang].btnSave;
-    
+    // Header
+    document.getElementById("titleText").innerText = t.title;
+    document.getElementById("subtitleText").innerText = t.subtitle;
+
+    // Badges
+    document.getElementById("badgeSustainable").innerText = t.badgeSustainable;
+    document.getElementById("badgeInnovative").innerText = t.badgeInnovative;
+    document.getElementById("badgeMunicipal").innerText = t.badgeMunicipal;
+
+    // Stats
+    document.getElementById("lblStatAsz").innerText = t.statAsz;
+    document.getElementById("lblStatRec").innerText = t.statRec;
+    document.getElementById("lblStatStaff").innerText = t.statStaff;
+    document.getElementById("lblStatCirc").innerText = t.statCirc;
+
+    // Footer
+    document.getElementById("footerTextEl").innerHTML = t.footer;
+
+    // Modal
+    document.getElementById("modalTitle").innerText = t.modalTitle;
+    document.getElementById("labelNameDe").innerText = t.labelNameDe;
+    document.getElementById("labelNameEn").innerText = t.labelNameEn;
+    document.getElementById("labelUrl").innerText = t.labelUrl;
+    document.getElementById("labelDescDe").innerText = t.labelDescDe;
+    document.getElementById("labelDescEn").innerText = t.labelDescEn;
+    document.getElementById("labelIcon").innerText = t.labelIcon;
+    document.getElementById("labelPassword").innerText = t.labelPassword;
+    document.getElementById("btnCancel").innerText = t.btnCancel;
+    document.getElementById("submitBtn").innerText = t.btnSave;
+
+    // Grid‑Ladehinweis
     const loadingEl = document.getElementById("gridLoading");
-    if (loadingEl) loadingEl.innerText = translations[lang].loading;
+    if (loadingEl) loadingEl.innerText = t.loading;
 
-    // Update Add-Button-Text im Grid
+    // Add‑Button im Grid
     const addText = document.getElementById("addPlaceholderText");
-    if (addText) addText.innerText = translations[lang].addApp;
+    if (addText) addText.innerText = t.addApp;
 
-    // Update Install-Button
+    // Install‑Button aktualisieren (Texte und Zustand)
     updateInstallButton();
 
-    // Refresh display layout text layers
+    // Apps neu rendern (für die mehrsprachigen Karten)
     renderApps();
 }
