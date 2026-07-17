@@ -1,11 +1,22 @@
+// Global Configuration
 const API_URL = "https://apps-api.lavu-ooe.workers.dev/";
 let apps = [];
 let currentLang = "de";
 
-// Dual Language Context Matrix
+// Vollständige Übersetzungsmatrix für alle Elemente
 const translations = {
     de: {
-        title: "LAVU OÖ - Anwendungs-Verzeichnis", // Aktualisiert
+        title: "LAVU OÖ - Anwendungs-Verzeichnis",
+        subtitle: "Zentrale Software-Infrastruktur & digitale Logistikwerkzeuge",
+        badgeSustainable: "Nachhaltig",
+        badgeInnovative: "Innovativ",
+        badgeMunicipal: "Kommunal",
+        btnInfo: "ℹ️ Info",
+        statAsz: "Altstoffsammelzentren (ASZ)",
+        statRec: "Jährlich gesammelte Wertstoffe",
+        statStaff: "Engagierte Teammitglieder",
+        statCirc: "Kreislaufwirtschaft Oberösterreich",
+        footerText: 'Erstellt mit <span style="color: #e74c3c;">&hearts;</span> von Karli',
         loading: "Lade Anwendungen...",
         addApp: "App hinzufügen",
         modalTitle: "Neue App hinzufügen",
@@ -13,6 +24,10 @@ const translations = {
         labelUrl: "Anwendungs-URL (Link) *",
         labelDesc: "Beschreibung",
         labelIcon: "Emoji Icon",
+        phName: "z.B. Etiketten-Druckstudio",
+        phUrl: "https://example.com",
+        phDesc: "Kurze Beschreibung der Funktion...",
+        phIcon: "z.B. 🏷️ (Standard: 🚀)",
         btnCancel: "Abbrechen",
         btnSave: "Speichern",
         btnSaving: "Wird gespeichert...",
@@ -20,7 +35,17 @@ const translations = {
         errSave: "Fehler beim Speichern der Anwendung."
     },
     en: {
-        title: "LAVU OÖ - Application Directory", // Aktualisiert
+        title: "LAVU OÖ - Application Directory",
+        subtitle: "Central software infrastructure & digital logistics tools",
+        badgeSustainable: "Sustainable",
+        badgeInnovative: "Innovative",
+        badgeMunicipal: "Municipal",
+        btnInfo: "ℹ️ Info",
+        statAsz: "Recycling Centers (ASZ)",
+        statRec: "Waste materials collected annually",
+        statStaff: "Dedicated team members",
+        statCirc: "Circular Economy Upper Austria",
+        footerText: 'Built with <span style="color: #e74c3c;">&hearts;</span> by Karli',
         loading: "Loading applications...",
         addApp: "Add Application",
         modalTitle: "Add New Application",
@@ -28,6 +53,10 @@ const translations = {
         labelUrl: "Application URL (Link) *",
         labelDesc: "Description",
         labelIcon: "Emoji Icon",
+        phName: "e.g. Label Printing Studio",
+        phUrl: "https://example.com",
+        phDesc: "Short description...",
+        phIcon: "e.g. 🏷️ (Default: 🚀)",
         btnCancel: "Cancel",
         btnSave: "Save",
         btnSaving: "Saving...",
@@ -38,7 +67,7 @@ const translations = {
 
 // Initialize Dashboard
 document.addEventListener("DOMContentLoaded", () => {
-    setLanguage(currentLang); // Sorgt dafür, dass die deutschen Texte sofort geladen werden
+    setLanguage(currentLang); // Setzt die Startsprache direkt fehlerfrei
     loadAppsFromAPI();
 });
 
@@ -52,14 +81,11 @@ async function loadAppsFromAPI() {
         renderApps();
     } catch (error) {
         console.error("API load failed, falling back to basic layout:", error);
-        // Fallback array utilizing standard fields and localized alternative options
         apps = [
             {
-                name_de: "Etiketten-Druckstudio",
-                name_en: "Label Printing Studio",
+                name: "Etiketten-Druckstudio",
                 url: "https://lavu-ooe.github.io/Etiketten-Druckstudio/",
-                desc_de: "Studio zur Erstellung und zum Druck von standardisierten Behälter- und Sortieretiketten.",
-                desc_en: "Studio for creating and printing standardized container and sorting labels.",
+                desc: "Studio zur Erstellung und zum Druck von standardisierten Behälter- und Sortieretiketten.",
                 icon: "🏷️"
             }
         ];
@@ -67,32 +93,25 @@ async function loadAppsFromAPI() {
     }
 }
 
-// Render active items and appends the dynamic operational placeholder card
+// Render active items
 function renderApps() {
     const grid = document.getElementById("app-grid");
     if (!grid) return;
     grid.innerHTML = "";
 
-    // 1. Map entries dynamically focusing on local translation properties
     apps.forEach(app => {
         const card = document.createElement("a");
         card.className = "app-card";
         card.href = app.url;
-        card.target = "_blank"; 
-
-        // Smart translation matching: Uses localized keys (name_de/name_en) if available, otherwise falls back to standard properties
-        const appName = app[`name_${currentLang}`] || app.name || "Unnamed App";
-        const appDesc = app[`desc_${currentLang}`] || app.desc || "";
-
+        card.target = "_blank";
         card.innerHTML = `
             <div class="app-icon">${app.icon || "🚀"}</div>
-            <h3>${appName}</h3>
-            <p>${appDesc}</p>
+            <h3>${app.name}</h3>
+            <p>${app.desc || ""}</p>
         `;
         grid.appendChild(card);
     });
 
-    // 2. Inject the 'Add App' Interactive Box into the sequential slot
     const addCard = document.createElement("div");
     addCard.className = "app-card add-placeholder-card";
     addCard.innerHTML = `
@@ -105,14 +124,6 @@ function renderApps() {
     grid.appendChild(addCard);
 }
 
-// Stats Container Toggle Link Activity
-function toggleStats() {
-    const statsSection = document.getElementById("lavuStatsDashboard");
-    if (statsSection) {
-        statsSection.classList.toggle("hidden");
-    }
-}
-
 // Modal Toggle Mechanics
 function openModal() {
     document.getElementById("addAppModal").classList.remove("hidden");
@@ -123,13 +134,14 @@ function closeModal() {
     document.getElementById("addAppForm").reset();
 }
 
-// Handle Form Execution and Save Data Dynamically
+// Handle Form Execution
 async function handleFormSubmit(event) {
     event.preventDefault();
-    
     const submitBtn = document.getElementById("submitBtn");
-    submitBtn.disabled = true;
-    submitBtn.innerText = translations[currentLang].btnSaving;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = translations[currentLang].btnSaving;
+    }
 
     const appData = {
         name: document.getElementById("appName").value,
@@ -146,22 +158,12 @@ async function handleFormSubmit(event) {
         });
 
         if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-
-        const contentType = response.headers.get("content-type");
-        let responseData = null;
-        
-        if (contentType && contentType.includes("application/json")) {
-            responseData = await response.json();
-        } else {
-            await response.text(); 
-        }
+        const responseData = await response.json().catch(() => null);
 
         if (Array.isArray(responseData)) {
             apps = responseData;
-        } else if (responseData && responseData.added) {
-            apps.push(responseData.added);
         } else {
-            apps.push(appData); 
+            apps.push(appData);
         }
 
         renderApps();
@@ -170,55 +172,69 @@ async function handleFormSubmit(event) {
         console.error("Error submitting new application link:", error);
         alert(translations[currentLang].errSave);
     } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = translations[currentLang].btnSave;
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = translations[currentLang].btnSave;
+        }
     }
 }
 
-// Update Local Language Matrix Options
+// Update Local Language Options (Jetzt absolut ausfallsicher)
 function setLanguage(lang) {
     currentLang = lang;
     
-    // Toggle active link visual highlights
-    document.getElementById("langBtnDe").classList.toggle("active", lang === "de");
-    document.getElementById("langBtnEn").classList.toggle("active", lang === "en");
+    // Helfer, um Fehler zu vermeiden, falls IDs im HTML fehlen
+    const safeSetText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text;
+    };
+    const safeSetHtml = (id, html) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    };
+    const safeSetPlaceholder = (id, ph) => {
+        const el = document.getElementById(id);
+        if (el && ph) el.placeholder = ph;
+    };
 
-    // Dynamic document DOM string injection (Header & Structure)
-    document.getElementById("titleText").innerText = translations[lang].title;
-    document.getElementById("subtitleText").innerText = translations[lang].subtitle;
+    // Klassen für Buttons umschalten
+    const btnDe = document.getElementById("langBtnDe");
+    const btnEn = document.getElementById("langBtnEn");
+    if (btnDe) btnDe.classList.toggle("active", lang === "de");
+    if (btnEn) btnEn.classList.toggle("active", lang === "en");
+
+    // Texte injizieren
+    safeSetText("titleText", translations[lang].title);
+    safeSetText("subtitleText", translations[lang].subtitle);
+    safeSetText("badgeSustainable", translations[lang].badgeSustainable);
+    safeSetText("badgeInnovative", translations[lang].badgeInnovative);
+    safeSetText("badgeMunicipal", translations[lang].badgeMunicipal);
+    safeSetText("btnInfoStats", translations[lang].btnInfo);
     
-    // Badges & Toggle Controls
-    document.getElementById("badgeSustainable").innerText = translations[lang].badgeSustainable;
-    document.getElementById("badgeInnovative").innerText = translations[lang].badgeInnovative;
-    document.getElementById("badgeMunicipal").innerText = translations[lang].badgeMunicipal;
-    document.getElementById("btnInfoStats").innerHTML = `<span>ℹ️</span> ${translations[lang].btnInfo.replace('ℹ️ ', '')}`;
+    // Stats Labels
+    safeSetText("lblStatAsz", translations[lang].statAsz);
+    safeSetText("lblStatRec", translations[lang].statRec);
+    safeSetText("lblStatStaff", translations[lang].statStaff);
+    safeSetText("lblStatCirc", translations[lang].statCirc);
 
-    // Statistics Card Metrics Labels
-    document.getElementById("lblStatAsz").innerText = translations[lang].statAsz;
-    document.getElementById("lblStatRec").innerText = translations[lang].statRec;
-    document.getElementById("lblStatStaff").innerText = translations[lang].statStaff;
-    document.getElementById("lblStatCirc").innerText = translations[lang].statCirc;
-
-    // Modal Form Labels
-    document.getElementById("modalTitle").innerText = translations[lang].modalTitle;
-    document.getElementById("labelName").innerText = translations[lang].labelName;
-    document.getElementById("labelUrl").innerText = translations[lang].labelUrl;
-    document.getElementById("labelDesc").innerText = translations[lang].labelDesc;
-    document.getElementById("labelIcon").innerText = translations[lang].labelIcon;
-    document.getElementById("btnCancel").innerText = translations[lang].btnCancel;
-    document.getElementById("submitBtn").innerText = translations[lang].btnSave;
+    // Modal Form
+    safeSetText("modalTitle", translations[lang].modalTitle);
+    safeSetText("labelName", translations[lang].labelName);
+    safeSetText("labelUrl", translations[lang].labelUrl);
+    safeSetText("labelDesc", translations[lang].labelDesc);
+    safeSetText("labelIcon", translations[lang].labelIcon);
+    safeSetText("btnCancel", translations[lang].btnCancel);
+    safeSetText("submitBtn", translations[lang].btnSave);
     
-    // Modal Input Form Placeholders
-    document.getElementById("appName").placeholder = translations[lang].phName;
-    document.getElementById("appUrl").placeholder = translations[lang].phUrl;
-    document.getElementById("appDesc").placeholder = translations[lang].phDesc;
-    document.getElementById("appIcon").placeholder = translations[lang].phIcon;
+    // Form Placeholders
+    safeSetPlaceholder("appName", translations[lang].phName);
+    safeSetPlaceholder("appUrl", translations[lang].phUrl);
+    safeSetPlaceholder("appDesc", translations[lang].phDesc);
+    safeSetPlaceholder("appIcon", translations[lang].phIcon);
     
-    // Footer & Async Loading Indicators
-    document.getElementById("footerTextEl").innerHTML = translations[lang].footerText;
-    const loadingEl = document.getElementById("gridLoading");
-    if (loadingEl) loadingEl.innerText = translations[lang].loading;
+    // Footer & Loading
+    safeSetHtml("footerTextEl", translations[lang].footerText);
+    safeSetText("gridLoading", translations[lang].loading);
 
-    // Refresh dynamic app layout grid fields 
     renderApps();
 }
