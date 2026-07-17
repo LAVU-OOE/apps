@@ -1,7 +1,7 @@
 {
-  "name": "LAVU OÖ App Drawer",
+  "name": "LAVU Apps",
   "short_name": "LAVU Apps",
-  "description": "Zentrale Software-Infrastruktur & digitale Logistikwerkzeuge",
+  "description": "Anwendungs-Verzeichnis – Zentrale Software-Infrastruktur & digitale Logistikwerkzeuge",
   "start_url": "/apps/",
   "display": "standalone",
   "background_color": "#f4f6f9",
