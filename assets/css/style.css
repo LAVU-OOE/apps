@@ -44,6 +44,13 @@ body {
     color: #1a202c;
 }
 
+/* Header Controls (Language + Install Button) */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 /* Language Selection Toggle */
 .language-selector {
     display: flex;
@@ -71,6 +78,32 @@ body {
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
+/* Install Button (PWA) */
+.install-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: none;
+    background: #3182ce;
+    color: white;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+}
+.install-btn:hover {
+    background: #2b6cb0;
+}
+.install-btn:active {
+    transform: scale(0.96);
+}
+.install-btn .install-icon {
+    font-size: 1.1rem;
+}
+
 /* Dynamic Responsive Grid Layout */
 .app-grid {
     display: grid;
@@ -89,7 +122,6 @@ body {
 
 /* Unified Dashboard Interactive Cards */
 .app-card {
-    position: relative; /* Wichtig für die absolute Platzierung des Bearbeiten-Stifts */
     background: white;
     border-radius: 10px;
     padding: 24px;
@@ -116,73 +148,12 @@ body {
     font-size: 1.2rem;
     color: #2d3748;
     margin-bottom: 8px;
-    padding-right: 25px; /* Verhindert Text-Überlagerung mit dem Edit-Button */
 }
 
 .app-card p {
     font-size: 0.9rem;
     color: #718096;
     line-height: 1.4;
-}
-
-/* Schwebender Edit-Button auf den Kacheln */
-.edit-card-btn {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    background: #edf2f7;
-    border: 1px solid #cbd5e0;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.9rem;
-    z-index: 5;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.edit-card-btn:hover {
-    background: #e2e8f0;
-    border-color: #a0aec0;
-    transform: scale(1.1);
-}
-
-/* Dashboard Stats Cards Layout */
-.lavu-dashboard-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.stat-card {
-    background: white;
-    padding: 16px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    border: 1px solid #edf2f7;
-}
-
-.stat-icon {
-    font-size: 2rem;
-}
-
-.stat-value {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #1a202c;
-}
-
-.stat-label {
-    font-size: 0.85rem;
-    color: #718096;
 }
 
 /* Nested Grid Add Placeholder Box */
@@ -297,12 +268,6 @@ body {
     outline: none;
     border-color: #3182ce;
     box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.25);
-}
-
-.form-group input:disabled {
-    background: #edf2f7;
-    color: #a0aec0;
-    cursor: not-allowed;
 }
 
 .form-actions {
