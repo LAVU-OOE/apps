@@ -422,3 +422,32 @@ body {
     border-color: #fc8181;
     transform: scale(1.1);
 }
+/* Öffnen-Button in der Karte */
+.open-app-btn {
+    background: #3182ce;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.open-app-btn:hover {
+    background: #2b6cb0;
+}
+.open-app-btn:active {
+    transform: scale(0.95);
+}
+
+/* Cursor für ganze Karte */
+.app-card {
+    cursor: pointer;
+}
+.app-card {
+    cursor: pointer;
+}

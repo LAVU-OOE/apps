@@ -207,11 +207,11 @@ function renderApps() {
     grid.innerHTML = "";
 
     apps.forEach((app, index) => {
-        const card = document.createElement("div"); // Kein <a> mehr, weil wir Buttons brauchen
+        const card = document.createElement("div");
         card.className = "app-card";
         card.style.position = "relative";
 
-        // ----- Flexibler Name -----
+        // ----- Namen & Beschreibung (wie bisher) -----
         let name = "Unbenannt";
         if (currentLang === 'de' && app.nameDe) {
             name = app.nameDe;
@@ -225,7 +225,6 @@ function renderApps() {
             name = app.nameEn;
         }
 
-        // ----- Flexible Beschreibung -----
         let desc = "";
         if (currentLang === 'de' && app.descDe) {
             desc = app.descDe;
@@ -239,30 +238,44 @@ function renderApps() {
             desc = app.descEn;
         }
 
+        // ----- Karten-Inhalt mit "Öffnen"-Button -----
+        const openText = currentLang === 'de' ? 'Öffnen' : 'Open';
         card.innerHTML = `
             <div class="app-icon">${app.icon || "🚀"}</div>
             <h3>${name}</h3>
             <p>${desc}</p>
-            <div style="margin-top: auto; display: flex; gap: 8px; justify-content: flex-end; padding-top: 12px; border-top: 1px solid #edf2f7;">
-                <button class="edit-card-btn" data-index="${index}" title="${translations[currentLang].editApp}">✏️</button>
-                <button class="delete-card-btn" data-index="${index}" title="${translations[currentLang].deleteApp}">🗑️</button>
+            <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #edf2f7;">
+                <button class="open-app-btn" data-url="${app.url}">
+                    ➡️ ${openText}
+                </button>
+                <div style="display: flex; gap: 6px;">
+                    <button class="edit-card-btn" data-index="${index}" title="${translations[currentLang].editApp}">✏️</button>
+                    <button class="delete-card-btn" data-index="${index}" title="${translations[currentLang].deleteApp}">🗑️</button>
+                </div>
             </div>
         `;
 
-        // Öffnet die App beim Klick auf die Karte (außer auf Buttons)
+        // --- Event-Listener für "Öffnen"-Button ---
+        const openBtn = card.querySelector('.open-app-btn');
+        openBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            window.open(app.url, '_blank');
+        });
+
+        // --- Klick auf die Karte (außerhalb der Buttons) ---
         card.addEventListener('click', (e) => {
             if (e.target.closest('button')) return;
             window.open(app.url, '_blank');
         });
 
-        // Edit-Button
+        // --- Edit-Button ---
         const editBtn = card.querySelector('.edit-card-btn');
         editBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             editApp(index);
         });
 
-        // Delete-Button
+        // --- Delete-Button ---
         const deleteBtn = card.querySelector('.delete-card-btn');
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -272,7 +285,7 @@ function renderApps() {
         grid.appendChild(card);
     });
 
-    // "App hinzufügen"-Kachel
+    // "App hinzufügen"-Kachel (unverändert)
     const addCard = document.createElement("div");
     addCard.className = "app-card add-placeholder-card";
     addCard.innerHTML = `
@@ -284,7 +297,6 @@ function renderApps() {
     addCard.addEventListener("click", openModal);
     grid.appendChild(addCard);
 }
-
 // ============================================================
 //  MODAL (Hinzufügen / Bearbeiten)
 // ============================================================
