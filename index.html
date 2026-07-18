@@ -34,16 +34,15 @@
             </div>
         </header>
 
-        <!-- Info Badges -->
-        <div class="badge-container" style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; align-items: center;">
-            <span id="badgeSustainable" style="background: #e6fffa; color: #234e52; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Sustainable</span>
-            <span id="badgeInnovative" style="background: #ebf8ff; color: #2b6cb0; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Innovative</span>
-            <span id="badgeMunicipal" style="background: #fefcbf; color: #744210; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Municipal</span>
-            <button id="btnInfoStats" style="background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; padding: 4px 14px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-                ℹ️ Info
-            </button>
-        </div>
-
+<!-- Info Badges -->
+<div class="badge-container" style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; align-items: center;">
+    <span id="badgeSustainable" style="background: #e6fffa; color: #234e52; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Nachhaltig</span>
+    <span id="badgeInnovative" style="background: #ebf8ff; color: #2b6cb0; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Innovativ</span>
+    <span id="badgeMunicipal" style="background: #fefcbf; color: #744210; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Kommunal</span>
+    <button id="btnInfoStats" onclick="toggleStats()" style="background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; padding: 4px 14px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+        ℹ️ <span id="infoStatsText">Info ausblenden</span>
+    </button>
+</div>
         <!-- Dashboard Stats Section -->
         <section class="lavu-dashboard-stats show" id="lavuStatsDashboard">
             <div class="stat-card">

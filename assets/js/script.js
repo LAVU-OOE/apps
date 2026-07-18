@@ -49,7 +49,9 @@ const translations = {
         installBtnText: "App",
         installBtnOpen: "Als App öffnen…",
         installBtnClose: "Schließen",
-        installFallback: "Die App kann über das Browser-Menü oder den Installationsbanner installiert werden."
+        installFallback: "Die App kann über das Browser-Menü oder den Installationsbanner installiert werden.",
+        toggleStatsHide: "Info ausblenden",
+        toggleStatsShow: "Info einblenden"
     },
     en: {
         title: "LAVU OÖ - Application Directory",
@@ -87,7 +89,9 @@ const translations = {
         installBtnText: "Install",
         installBtnOpen: "Open as…",
         installBtnClose: "Close",
-        installFallback: "You can install this app via the browser menu or the installation banner."
+        installFallback: "You can install this app via the browser menu or the installation banner.",
+        toggleStatsHide: "Hide Info",
+        toggleStatsShow: "Show Info"
     }
 };
 
@@ -95,6 +99,7 @@ const translations = {
 //  INITIALISIERUNG (mit Spracherkennung & localStorage)
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
+    // 1. Sprache laden oder erkennen
     const savedLang = localStorage.getItem('preferredLanguage');
     if (savedLang) {
         currentLang = savedLang;
@@ -104,13 +109,55 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('preferredLanguage', currentLang);
     }
     setLanguage(currentLang);
+
+    // 2. Stats-Sichtbarkeit aus localStorage wiederherstellen
+    const statsHidden = localStorage.getItem('statsHidden') === 'true';
+    const statsSection = document.getElementById('lavuStatsDashboard');
+    if (statsSection) {
+        if (statsHidden) {
+            statsSection.classList.add('hidden');
+        } else {
+            statsSection.classList.remove('hidden');
+        }
+    }
+    updateStatsButtonText();
+
+    // 3. PWA-Events und Apps laden
     registerInstallEvents();
     updateInstallButton();
     loadAppsFromAPI();
 });
 
 // ============================================================
-//  PWA‑INSTALLATIONS‑LOGIK
+//  STATS TOGGLE
+// ============================================================
+function toggleStats() {
+    const statsSection = document.getElementById('lavuStatsDashboard');
+    if (!statsSection) return;
+
+    const isHidden = statsSection.classList.contains('hidden');
+    if (isHidden) {
+        statsSection.classList.remove('hidden');
+        localStorage.setItem('statsHidden', 'false');
+    } else {
+        statsSection.classList.add('hidden');
+        localStorage.setItem('statsHidden', 'true');
+    }
+    updateStatsButtonText();
+}
+
+function updateStatsButtonText() {
+    const statsSection = document.getElementById('lavuStatsDashboard');
+    const textSpan = document.getElementById('infoStatsText');
+    if (!statsSection || !textSpan) return;
+
+    const isHidden = statsSection.classList.contains('hidden');
+    const t = translations[currentLang];
+    textSpan.innerText = isHidden ? t.toggleStatsShow : t.toggleStatsHide;
+}
+
+// ============================================================
+//  PWA‑INSTALLATIONS‑LOGIK (unverändert)
 // ============================================================
 function registerInstallEvents() {
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -143,21 +190,20 @@ function updateInstallButton() {
         icon.textContent = '❌';
         text.textContent = translations[currentLang].installBtnClose;
         btn.onclick = () => window.close();
-        btn.style.background = '#718096'; // grau
+        btn.style.background = '#718096';
         return;
     }
     if (isInstalled) {
         icon.textContent = '📲';
         text.textContent = translations[currentLang].installBtnOpen;
         btn.onclick = openInstalledApp;
-        btn.style.background = '#38a169'; // grün (bleibt)
+        btn.style.background = '#38a169';
         return;
     }
-    // Install-Modus – jetzt auch GRÜN
     icon.textContent = '📲';
     text.textContent = translations[currentLang].installBtnText;
     btn.onclick = installApp;
-    btn.style.background = '#38a169'; // grün
+    btn.style.background = '#38a169';
 }
 
 function installApp() {
@@ -427,9 +473,7 @@ async function deleteApp(index) {
 //  SPRACHUMSCHALTUNG (alle Texte aktualisieren)
 // ============================================================
 function setLanguage(lang) {
-    // Sprache dauerhaft speichern
     localStorage.setItem('preferredLanguage', lang);
-    
     currentLang = lang;
     const t = translations[lang];
 
@@ -469,5 +513,6 @@ function setLanguage(lang) {
     if (addText) addText.innerText = t.addApp;
 
     updateInstallButton();
+    updateStatsButtonText();
     renderApps();
 }
