@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LAVU OÖ - Anwendungs-Verzeichnis</title>
+    <title>LAVU OÖ - Application Directory</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
     <!-- PWA Manifest -->
@@ -17,14 +17,14 @@
             <div class="brand">
                 <img src="assets/icons/LAVU_logo.png" alt="LAVU Logo" class="logo" onerror="this.style.display='none'">
                 <div>
-                    <h1 id="titleText">LAVU OÖ - Anwendungs-Verzeichnis</h1>
-                    <p class="subtitle" id="subtitleText" style="color: #718096; font-size: 0.95rem; margin-top: 4px;">Zentrale Software-Infrastruktur & digitale Logistikwerkzeuge</p>
+                    <h1 id="titleText">LAVU OÖ - Application Directory</h1>
+                    <p class="subtitle" id="subtitleText" style="color: #718096; font-size: 0.95rem; margin-top: 4px;">Central software infrastructure & digital logistics tools</p>
                 </div>
             </div>
             <div class="header-controls">
                 <div class="language-selector">
-                    <button onclick="setLanguage('de')" id="langBtnDe" class="lang-btn active">DE</button>
-                    <button onclick="setLanguage('en')" id="langBtnEn" class="lang-btn">EN</button>
+                    <button onclick="setLanguage('de')" id="langBtnDe" class="lang-btn">DE</button>
+                    <button onclick="setLanguage('en')" id="langBtnEn" class="lang-btn active">EN</button>
                 </div>
                 <!-- PWA Install Button -->
                 <button id="installAppBtn" class="install-btn">
@@ -36,9 +36,9 @@
 
         <!-- Info Badges -->
         <div class="badge-container" style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; align-items: center;">
-            <span id="badgeSustainable" style="background: #e6fffa; color: #234e52; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Nachhaltig</span>
-            <span id="badgeInnovative" style="background: #ebf8ff; color: #2b6cb0; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Innovativ</span>
-            <span id="badgeMunicipal" style="background: #fefcbf; color: #744210; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Kommunal</span>
+            <span id="badgeSustainable" style="background: #e6fffa; color: #234e52; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Sustainable</span>
+            <span id="badgeInnovative" style="background: #ebf8ff; color: #2b6cb0; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Innovative</span>
+            <span id="badgeMunicipal" style="background: #fefcbf; color: #744210; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Municipal</span>
             <button id="btnInfoStats" style="background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; padding: 4px 14px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
                 ℹ️ Info
             </button>
@@ -50,28 +50,28 @@
                 <div class="stat-icon">🌱</div>
                 <div class="stat-info">
                     <p class="stat-value">179</p>
-                    <p class="stat-label" id="lblStatAsz">Altstoffsammelzentren (ASZ)</p>
+                    <p class="stat-label" id="lblStatAsz">Recycling Centers (ASZ)</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🚛</div>
                 <div class="stat-info">
                     <p class="stat-value">&gt; 300k t</p>
-                    <p class="stat-label" id="lblStatRec">Jährlich gesammelte Wertstoffe</p>
+                    <p class="stat-label" id="lblStatRec">Waste materials collected annually</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">👥</div>
                 <div class="stat-info">
                     <p class="stat-value">700+</p>
-                    <p class="stat-label" id="lblStatStaff">Engagierte Teammitglieder</p>
+                    <p class="stat-label" id="lblStatStaff">Dedicated team members</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🔄</div>
                 <div class="stat-info">
                     <p class="stat-value">100%</p>
-                    <p class="stat-label" id="lblStatCirc">Kreislaufwirtschaft Oberösterreich</p>
+                    <p class="stat-label" id="lblStatCirc">Circular Economy Upper Austria</p>
                 </div>
             </div>
         </section>
@@ -80,12 +80,12 @@
 
         <!-- Main App Grid Container -->
         <main class="app-grid" id="app-grid">
-            <div class="grid-loading" id="gridLoading">Lade Anwendungen...</div>
+            <div class="grid-loading" id="gridLoading">Loading applications...</div>
         </main>
 
         <!-- Footer -->
         <div class="ftr" style="display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9rem;">
-            <span id="footerTextEl">Erstellt mit <span style="color: #e74c3c;">&hearts;</span> von Karli</span>
+            <span id="footerTextEl">Built with <span style="color: #e74c3c;">&hearts;</span> by Karli</span>
             <span style="color: #cbd5e1;">|</span>
             <a href="https://github.com/7pub" target="_blank" style="display: inline-flex; align-items: center; gap: 5px; color: inherit; text-decoration: none;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
@@ -99,28 +99,28 @@
     <div class="modal-overlay hidden" id="addAppModal">
         <div class="modal-box">
             <div class="modal-header">
-                <h2 id="modalTitle">Neue App hinzufügen</h2>
+                <h2 id="modalTitle">Add New Application</h2>
                 <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
             <form id="addAppForm" onsubmit="handleFormSubmit(event)">
                 <div class="form-group">
-                    <label for="appNameDe" id="labelNameDe">Name der Anwendung (DE) *</label>
+                    <label for="appNameDe" id="labelNameDe">Application Name (DE) *</label>
                     <input type="text" id="appNameDe" required placeholder="z.B. Etiketten-Druckstudio">
                 </div>
                 <div class="form-group">
-                    <label for="appNameEn" id="labelNameEn">Name der Anwendung (EN) *</label>
+                    <label for="appNameEn" id="labelNameEn">Application Name (EN) *</label>
                     <input type="text" id="appNameEn" required placeholder="e.g. Label Printing Studio">
                 </div>
                 <div class="form-group">
-                    <label for="appUrl" id="labelUrl">Anwendungs-URL (Link) *</label>
+                    <label for="appUrl" id="labelUrl">Application URL (Link) *</label>
                     <input type="url" id="appUrl" required placeholder="https://example.com">
                 </div>
                 <div class="form-group">
-                    <label for="appDescDe" id="labelDescDe">Beschreibung (DE)</label>
+                    <label for="appDescDe" id="labelDescDe">Description (DE)</label>
                     <textarea id="appDescDe" rows="2" placeholder="Kurze Beschreibung..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="appDescEn" id="labelDescEn">Beschreibung (EN)</label>
+                    <label for="appDescEn" id="labelDescEn">Description (EN)</label>
                     <textarea id="appDescEn" rows="2" placeholder="Short description..."></textarea>
                 </div>
                 <div class="form-group">
@@ -130,22 +130,21 @@
                 
                 <!-- Sicherheitskomponente -->
                 <div class="form-group" id="passwordGroup">
-                    <label for="adminPassword" id="labelPassword" style="color: #e53e3e;">Admin Passwort *</label>
-                    <input type="password" id="adminPassword" autocomplete="current-password" required placeholder="Sicherheitsschlüssel erforderlich">
+                    <label for="adminPassword" id="labelPassword" style="color: #e53e3e;">Admin Password *</label>
+                    <input type="password" id="adminPassword" autocomplete="current-password" required placeholder="Security key required">
                 </div>
 
                 <!-- Versteckter Index für Bearbeitung -->
                 <input type="hidden" id="editIndex" value="">
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()" id="btnCancel">Abbrechen</button>
-                    <button type="submit" class="btn btn-primary" id="submitBtn">Speichern</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()" id="btnCancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- JavaScript -->
     <script src="assets/js/script.js" defer></script>
 </body>
 </html>

@@ -3,8 +3,7 @@
 // ============================================================
 const API_URL = "https://apps-api.lavu-ooe.workers.dev/";
 let apps = [];
-let currentLang = "de";
-let editIndex = null; // Speichert den Index der zu bearbeitenden App
+let currentLang = "en"; // Standard auf Englisch
 
 // PWA‑Installations‑Globals
 let deferredPrompt = null;
@@ -99,7 +98,10 @@ document.addEventListener("DOMContentLoaded", () => {
     loadAppsFromAPI();
     updateInstallButton();
     registerInstallEvents();
+    setLanguage('en'); // Standardsprache setzen
 });
+
+// ... (der Rest der Datei bleibt unverändert – alle anderen Funktionen wie zuvor)
 
 // ============================================================
 //  PWA‑INSTALLATIONS‑LOGIK
