@@ -3,7 +3,7 @@
 // ============================================================
 const API_URL = "https://apps-api.lavu-ooe.workers.dev/";
 let apps = [];
-let currentLang = "en"; // Standard auf Englisch
+let currentLang = "en";
 
 // PWA‑Installations‑Globals
 let deferredPrompt = null;
@@ -92,32 +92,20 @@ const translations = {
 };
 
 // ============================================================
-//  INITIALISIERUNG
+//  INITIALISIERUNG (mit Spracherkennung & localStorage)
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Gespeicherte Sprache aus localStorage lesen
     const savedLang = localStorage.getItem('preferredLanguage');
-    
     if (savedLang) {
-        // Wenn eine Sprache gespeichert ist, diese verwenden
         currentLang = savedLang;
     } else {
-        // 2. Andernfalls die Browser-Sprache erkennen
         const browserLang = navigator.language || navigator.languages?.[0] || 'en';
-        // Prüfen, ob die Sprache mit "de" beginnt (z.B. "de", "de-DE", "de-AT")
         currentLang = browserLang.startsWith('de') ? 'de' : 'en';
-        // Sofort in localStorage speichern
         localStorage.setItem('preferredLanguage', currentLang);
     }
-    
-    // 3. Seite mit der ermittelten Sprache initialisieren
     setLanguage(currentLang);
-    
-    // 4. PWA-Installations-Events registrieren
     registerInstallEvents();
     updateInstallButton();
-    
-    // 5. Apps laden
     loadAppsFromAPI();
 });
 
@@ -155,20 +143,21 @@ function updateInstallButton() {
         icon.textContent = '❌';
         text.textContent = translations[currentLang].installBtnClose;
         btn.onclick = () => window.close();
-        btn.style.background = '#718096';
+        btn.style.background = '#718096'; // grau
         return;
     }
     if (isInstalled) {
         icon.textContent = '📲';
         text.textContent = translations[currentLang].installBtnOpen;
         btn.onclick = openInstalledApp;
-        btn.style.background = '#38a169';
+        btn.style.background = '#38a169'; // grün (bleibt)
         return;
     }
+    // Install-Modus – jetzt auch GRÜN
     icon.textContent = '📲';
     text.textContent = translations[currentLang].installBtnText;
     btn.onclick = installApp;
-    btn.style.background = '#3182ce';
+    btn.style.background = '#38a169'; // grün
 }
 
 function installApp() {
@@ -231,7 +220,6 @@ function renderApps() {
         card.className = "app-card";
         card.style.position = "relative";
 
-        // ----- Namen & Beschreibung (wie bisher) -----
         let name = "Unbenannt";
         if (currentLang === 'de' && app.nameDe) {
             name = app.nameDe;
@@ -258,46 +246,39 @@ function renderApps() {
             desc = app.descEn;
         }
 
-        // ----- Karten-Inhalt mit getauschten Button-Positionen -----
         const openText = currentLang === 'de' ? 'Öffnen' : 'Open';
         card.innerHTML = `
             <div class="app-icon">${app.icon || "🚀"}</div>
             <h3>${name}</h3>
             <p>${desc}</p>
             <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #edf2f7;">
-                <!-- Links: Edit & Delete -->
                 <div style="display: flex; gap: 6px;">
                     <button class="edit-card-btn" data-index="${index}" title="${translations[currentLang].editApp}">✏️</button>
                     <button class="delete-card-btn" data-index="${index}" title="${translations[currentLang].deleteApp}">🗑️</button>
                 </div>
-                <!-- Rechts: Öffnen-Button -->
                 <button class="open-app-btn" data-url="${app.url}">
                     ➡️ ${openText}
                 </button>
             </div>
         `;
 
-        // --- Event-Listener für "Öffnen"-Button ---
         const openBtn = card.querySelector('.open-app-btn');
         openBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             window.open(app.url, '_blank');
         });
 
-        // --- Klick auf die Karte (außerhalb der Buttons) ---
         card.addEventListener('click', (e) => {
             if (e.target.closest('button')) return;
             window.open(app.url, '_blank');
         });
 
-        // --- Edit-Button ---
         const editBtn = card.querySelector('.edit-card-btn');
         editBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             editApp(index);
         });
 
-        // --- Delete-Button ---
         const deleteBtn = card.querySelector('.delete-card-btn');
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -307,7 +288,6 @@ function renderApps() {
         grid.appendChild(card);
     });
 
-    // "App hinzufügen"-Kachel (unverändert)
     const addCard = document.createElement("div");
     addCard.className = "app-card add-placeholder-card";
     addCard.innerHTML = `
@@ -453,29 +433,23 @@ function setLanguage(lang) {
     currentLang = lang;
     const t = translations[lang];
 
-    // Sprach‑Buttons
     document.getElementById("langBtnDe").classList.toggle("active", lang === "de");
     document.getElementById("langBtnEn").classList.toggle("active", lang === "en");
 
-    // Header
     document.getElementById("titleText").innerText = t.title;
     document.getElementById("subtitleText").innerText = t.subtitle;
 
-    // Badges
     document.getElementById("badgeSustainable").innerText = t.badgeSustainable;
     document.getElementById("badgeInnovative").innerText = t.badgeInnovative;
     document.getElementById("badgeMunicipal").innerText = t.badgeMunicipal;
 
-    // Stats
     document.getElementById("lblStatAsz").innerText = t.statAsz;
     document.getElementById("lblStatRec").innerText = t.statRec;
     document.getElementById("lblStatStaff").innerText = t.statStaff;
     document.getElementById("lblStatCirc").innerText = t.statCirc;
 
-    // Footer
     document.getElementById("footerTextEl").innerHTML = t.footer;
 
-    // Modal
     const isEdit = document.getElementById('editIndex').value !== '';
     document.getElementById("modalTitle").innerText = isEdit ? t.modalTitleEdit : t.modalTitleAdd;
     document.getElementById("labelNameDe").innerText = t.labelNameDe;
@@ -488,17 +462,12 @@ function setLanguage(lang) {
     document.getElementById("btnCancel").innerText = t.btnCancel;
     document.getElementById("submitBtn").innerText = isEdit ? t.btnUpdate : t.btnSave;
 
-    // Grid‑Ladehinweis
     const loadingEl = document.getElementById("gridLoading");
     if (loadingEl) loadingEl.innerText = t.loading;
 
-    // Add‑Button im Grid
     const addText = document.getElementById("addPlaceholderText");
     if (addText) addText.innerText = t.addApp;
 
-    // Install‑Button aktualisieren (Texte und Zustand)
     updateInstallButton();
-
-    // Apps neu rendern (für die mehrsprachigen Karten)
     renderApps();
 }

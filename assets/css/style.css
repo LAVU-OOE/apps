@@ -78,14 +78,14 @@ body {
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Install Button (PWA) */
+/* Install Button (PWA) – jetzt GRÜN */
 .install-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 6px 14px;
     border: none;
-    background: #3182ce;
+    background: #38a169; /* Grün */
     color: white;
     border-radius: 6px;
     font-weight: 600;
@@ -95,7 +95,7 @@ body {
     white-space: nowrap;
 }
 .install-btn:hover {
-    background: #2b6cb0;
+    background: #2f855a; /* dunkleres Grün */
 }
 .install-btn:active {
     transform: scale(0.96);
@@ -133,6 +133,7 @@ body {
     flex-direction: column;
     min-height: 180px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
 .app-card:not(.add-placeholder-card):hover {
@@ -160,28 +161,66 @@ body {
 
 /* Edit-Button auf den Kacheln */
 .edit-card-btn {
-    position: absolute;
-    top: 14px;
-    right: 14px;
     background: #edf2f7;
     border: 1px solid #cbd5e0;
     border-radius: 50%;
     width: 32px;
     height: 32px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 0.9rem;
-    z-index: 5;
     transition: all 0.2s ease;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
-
 .edit-card-btn:hover {
     background: #e2e8f0;
     border-color: #a0aec0;
     transform: scale(1.1);
+}
+
+/* Delete-Button */
+.delete-card-btn {
+    background: #fed7d7;
+    border: 1px solid #feb2b2;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.delete-card-btn:hover {
+    background: #feb2b2;
+    border-color: #fc8181;
+    transform: scale(1.1);
+}
+
+/* Öffnen-Button in der Karte – jetzt GRÜN */
+.open-app-btn {
+    background: #38a169;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.open-app-btn:hover {
+    background: #2f855a;
+}
+.open-app-btn:active {
+    transform: scale(0.95);
 }
 
 /* Dashboard Stats Cards */
@@ -380,74 +419,4 @@ body {
 
 .hidden {
     display: none !important;
-}
-/* Edit-Button auf den Kacheln */
-.edit-card-btn {
-    background: #edf2f7;
-    border: 1px solid #cbd5e0;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-.edit-card-btn:hover {
-    background: #e2e8f0;
-    border-color: #a0aec0;
-    transform: scale(1.1);
-}
-
-/* Delete-Button */
-.delete-card-btn {
-    background: #fed7d7;
-    border: 1px solid #feb2b2;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-.delete-card-btn:hover {
-    background: #feb2b2;
-    border-color: #fc8181;
-    transform: scale(1.1);
-}
-/* Öffnen-Button in der Karte */
-.open-app-btn {
-    background: #3182ce;
-    color: white;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 4px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-.open-app-btn:hover {
-    background: #2b6cb0;
-}
-.open-app-btn:active {
-    transform: scale(0.95);
-}
-
-/* Cursor für ganze Karte */
-.app-card {
-    cursor: pointer;
-}
-.app-card {
-    cursor: pointer;
 }
