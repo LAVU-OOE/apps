@@ -14,7 +14,7 @@ const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
 // ============================================================
 const translations = {
     de: {
-        title: "LAVU OÖ - Anwendungs-Verzeichnis",
+        title: "LAVU OOE - Apps",
         subtitle: "Zentrale Software-Infrastruktur & digitale Logistikwerkzeuge",
         loading: "Lade Anwendungen...",
         addApp: "App hinzufügen",
@@ -54,7 +54,7 @@ const translations = {
         toggleStatsShow: "Info einblenden"
     },
     en: {
-        title: "LAVU OÖ - Application Directory",
+        title: "LAVU OOE - Apps",
         subtitle: "Central software infrastructure & digital logistics tools",
         loading: "Loading applications...",
         addApp: "Add Application",
