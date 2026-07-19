@@ -1,5 +1,4 @@
 ```
-├── 🗂️ apps.json
 ├── 📄 favicon.ico
 ├── 📄 folder-structure
 ├── 📁 images
@@ -15,6 +14,7 @@
 ├── 📄 LICENSE
 ├── 🗂️ manifest.json
 ├── 📜 raw.usercontent.md
+├── 🗂️ reapps.json
 ├── 🟨 script.js
 ├── 🎨 style.css
 
